@@ -13,6 +13,10 @@ class User extends BaseController
         $this->userModel = new UserModel();
     }
 
+    /**
+     * Menampilkan halaman daftar semua User.
+     * Mengambil seluruh data user dari database dan mengirimkannya ke view `user/index`.
+     */
     public function index()
     {
         $data = [
@@ -24,6 +28,10 @@ class User extends BaseController
         return view('user/index', $data);
     }
 
+    /**
+     * Menampilkan halaman form untuk menambah User baru.
+     * Mengarahkan ke view `user/create`.
+     */
     public function create()
     {
         $data = [
@@ -34,6 +42,12 @@ class User extends BaseController
         return view('user/create', $data);
     }
 
+    /**
+     * Memproses data yang dikirimkan dari form tambah User.
+     * Mengecek duplikasi username terlebih dahulu.
+     * Password di-hash menggunakan algoritma bcrypt sebelum disimpan.
+     * Menyimpan data (nama, username, password, role) ke database melalui UserModel.
+     */
     public function store()
     {
         $username = $this->request->getPost('username');
@@ -57,6 +71,10 @@ class User extends BaseController
         return redirect()->to(base_url('user'))->with('success', 'User baru berhasil ditambahkan.');
     }
 
+    /**
+     * Menampilkan halaman form untuk mengedit data User berdasarkan ID.
+     * Mengambil data spesifik user dan mengirimkannya ke view `user/edit`.
+     */
     public function edit($id)
     {
         $user = $this->userModel->find($id);
@@ -73,6 +91,12 @@ class User extends BaseController
         return view('user/edit', $data);
     }
 
+    /**
+     * Memproses pembaruan data User yang diedit berdasarkan ID.
+     * Mengecek duplikasi username jika username diubah.
+     * Password hanya diperbarui jika field password diisi (tidak kosong).
+     * Mengupdate record di database dengan data baru dari form.
+     */
     public function update($id)
     {
         $user = $this->userModel->find($id);
@@ -107,6 +131,11 @@ class User extends BaseController
         return redirect()->to(base_url('user'))->with('success', 'Data user berhasil diperbarui.');
     }
 
+    /**
+     * Menghapus data User berdasarkan ID.
+     * Terdapat pengecekan agar user yang sedang login tidak bisa menghapus akunnya sendiri.
+     * Setelah data dihapus, diarahkan kembali ke halaman daftar user.
+     */
     public function delete($id)
     {
         // Cegah menghapus diri sendiri yang sedang login

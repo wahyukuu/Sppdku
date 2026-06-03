@@ -13,6 +13,10 @@ class Pegawai extends BaseController
         $this->pegawaiModel = new PegawaiModel();
     }
 
+    /**
+     * Menampilkan halaman daftar Pegawai.
+     * Mengambil seluruh data pegawai dari database dan mengirimkannya ke view `pegawai/index`.
+     */
     public function index()
     {
         if (!session()->get('logged_in')) {
@@ -28,6 +32,10 @@ class Pegawai extends BaseController
         return view('pegawai/index', $data);
     }
 
+    /**
+     * Menampilkan halaman form untuk menambah data Pegawai baru.
+     * Mengarahkan ke view `pegawai/create`.
+     */
     public function create()
     {
         if (!session()->get('logged_in')) {
@@ -42,6 +50,10 @@ class Pegawai extends BaseController
         return view('pegawai/create', $data);
     }
 
+    /**
+     * Memproses data yang dikirimkan dari form tambah Pegawai.
+     * Menyimpan data (NIP, nama, pangkat, dll) ke dalam database melalui PegawaiModel.
+     */
     public function store()
     {
         if (!session()->get('logged_in')) {
@@ -61,6 +73,10 @@ class Pegawai extends BaseController
         return redirect()->to(base_url('pegawai'))->with('success', 'Data pegawai berhasil ditambahkan.');
     }
 
+    /**
+     * Menampilkan halaman form untuk mengedit data Pegawai berdasarkan ID.
+     * Mengambil data spesifik pegawai dan mengirimkannya ke view `pegawai/edit`.
+     */
     public function edit($id)
     {
         if (!session()->get('logged_in')) {
@@ -81,6 +97,10 @@ class Pegawai extends BaseController
         return view('pegawai/edit', $data);
     }
 
+    /**
+     * Memproses pembaruan data Pegawai yang diedit berdasarkan ID.
+     * Mengupdate record di database dengan data baru dari form.
+     */
     public function update($id)
     {
         if (!session()->get('logged_in')) {
@@ -100,6 +120,10 @@ class Pegawai extends BaseController
         return redirect()->to(base_url('pegawai'))->with('success', 'Data pegawai berhasil diubah.');
     }
 
+    /**
+     * Menghapus data Pegawai berdasarkan ID.
+     * Setelah data dihapus, akan diarahkan kembali ke halaman daftar pegawai.
+     */
     public function delete($id)
     {
         if (!session()->get('logged_in')) {

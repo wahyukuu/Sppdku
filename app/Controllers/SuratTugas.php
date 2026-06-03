@@ -28,6 +28,13 @@ class SuratTugas extends BaseController
         $this->sppdModel              = new SppdModel();
     }
 
+    /**
+     * Menampilkan halaman daftar semua Surat Tugas.
+     * Melakukan join ke tabel pejabat dan pegawai untuk menampilkan nama pejabat penandatangan.
+     * Untuk setiap surat tugas, juga mengambil daftar nama pegawai yang ditugaskan
+     * dari tabel pivot surat_tugas_pegawai.
+     * Mengarahkan ke view `surat_tugas/index`.
+     */
     public function index()
     {
         if (!session()->get('logged_in')) {
@@ -61,6 +68,12 @@ class SuratTugas extends BaseController
         return view('surat_tugas/index', $data);
     }
 
+    /**
+     * Menampilkan halaman form untuk membuat Surat Tugas baru.
+     * Mengambil daftar pejabat (dengan nama pegawai) dan daftar seluruh pegawai
+     * untuk ditampilkan di dropdown pilihan.
+     * Mengarahkan ke view `surat_tugas/create`.
+     */
     public function create()
     {
         if (!session()->get('logged_in')) {
@@ -82,6 +95,14 @@ class SuratTugas extends BaseController
         return view('surat_tugas/create', $data);
     }
 
+    /**
+     * Memproses penyimpanan Surat Tugas baru dari data form.
+     * Alur proses:
+     * 1. Menyimpan data utama surat tugas (nomor, dasar, maksud, tujuan, tanggal, jenis, pejabat TTD, opsi Sabtu/Minggu).
+     * 2. Menyimpan daftar pegawai yang ditugaskan ke tabel pivot surat_tugas_pegawai,
+     *    dan secara otomatis membuat dokumen SPPD untuk setiap pegawai.
+     * 3. Menyimpan daftar tujuan perjalanan ke tabel surat_tugas_tujuan.
+     */
     public function store()
     {
         if (!session()->get('logged_in')) {
@@ -113,6 +134,8 @@ class SuratTugas extends BaseController
             'jenis'           => $this->request->getPost('jenis'),
             'id_pejabat_ttd'  => $idPejabat,
             'id_user'         => session()->get('id_user') ?? 1,
+            'hitung_sabtu'    => $this->request->getPost('hitung_sabtu') ? 1 : 0,
+            'hitung_minggu'   => $this->request->getPost('hitung_minggu') ? 1 : 0,
         ];
 
         $this->suratTugasModel->insert($stData);
@@ -147,6 +170,12 @@ class SuratTugas extends BaseController
         return redirect()->to(base_url('surat-tugas'))->with('success', 'Surat Tugas dan SPPD berhasil diterbitkan.');
     }
 
+    /**
+     * Menampilkan halaman form untuk mengedit Surat Tugas berdasarkan ID.
+     * Mengambil data surat tugas yang ada, daftar pegawai yang sudah ditugaskan (assignedIds),
+     * daftar pejabat, seluruh pegawai, dan daftar tujuan yang sudah disimpan.
+     * Mengarahkan ke view `surat_tugas/edit`.
+     */
     public function edit($id)
     {
         if (!session()->get('logged_in')) {
@@ -187,6 +216,14 @@ class SuratTugas extends BaseController
         return view('surat_tugas/edit', $data);
     }
 
+    /**
+     * Memproses pembaruan data Surat Tugas berdasarkan ID.
+     * Alur proses:
+     * 1. Mengupdate data utama surat tugas.
+     * 2. Sinkronisasi pegawai: menghapus semua assignment pegawai dan SPPD lama,
+     *    lalu memasukkan ulang pegawai baru dan membuat SPPD baru (delete + re-insert).
+     * 3. Sinkronisasi tujuan: menghapus tujuan lama dan memasukkan tujuan baru.
+     */
     public function update($id)
     {
         if (!session()->get('logged_in')) {
@@ -217,6 +254,8 @@ class SuratTugas extends BaseController
             'tanggal_surat'   => $this->request->getPost('tanggal_surat'),
             'jenis'           => $this->request->getPost('jenis'),
             'id_pejabat_ttd'  => $idPejabat,
+            'hitung_sabtu'    => $this->request->getPost('hitung_sabtu') ? 1 : 0,
+            'hitung_minggu'   => $this->request->getPost('hitung_minggu') ? 1 : 0,
         ];
         $this->suratTugasModel->update($id, $stData);
 
@@ -255,6 +294,14 @@ class SuratTugas extends BaseController
         return redirect()->to(base_url('surat-tugas'))->with('success', 'Surat Tugas dan SPPD berhasil diperbarui.');
     }
 
+    /**
+     * Menghapus Surat Tugas beserta semua data terkait berdasarkan ID.
+     * Data yang dihapus meliputi:
+     * - Pegawai yang ditugaskan (surat_tugas_pegawai)
+     * - Tujuan perjalanan (surat_tugas_tujuan)
+     * - Dokumen SPPD terkait
+     * - Surat Tugas itu sendiri
+     */
     public function delete($id)
     {
         if (!session()->get('logged_in')) {
@@ -272,6 +319,12 @@ class SuratTugas extends BaseController
         return redirect()->to(base_url('surat-tugas'))->with('success', 'Surat Tugas beserta dokumen SPPD terkait berhasil dihapus.');
     }
 
+    /**
+     * Mencetak dokumen Surat Tugas berdasarkan ID.
+     * Mengambil data surat tugas, pejabat penandatangan (dengan nama, NIP, pangkat, golongan),
+     * dan daftar pegawai yang ditugaskan.
+     * Data dikirimkan ke view `surat_tugas/print` untuk dicetak.
+     */
     public function print($id)
     {
         if (!session()->get('logged_in')) {

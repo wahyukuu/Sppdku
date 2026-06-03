@@ -9,6 +9,12 @@ use App\Models\SppdModel;
 
 class Dashboard extends BaseController
 {
+    /**
+     * Menampilkan halaman Dashboard utama.
+     * Mengambil statistik ringkasan: total pegawai, total pejabat, total surat tugas,
+     * dan total SPPD. Juga mengambil 5 surat tugas terbaru (diurutkan berdasarkan created_at DESC).
+     * Semua data dikirimkan ke view `dashboard`.
+     */
     public function index()
     {
         if (!session()->get('logged_in')) {

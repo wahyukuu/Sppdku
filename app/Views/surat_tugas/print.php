@@ -4,11 +4,16 @@ $end = new DateTime($suratTugas['tanggal_selesai']);
 $durasi = 0;
 $current = clone $start;
 
+$hitungSabtu = !empty($suratTugas['hitung_sabtu']);
+$hitungMinggu = !empty($suratTugas['hitung_minggu']);
+
 while ($current <= $end) {
-    if (isset($suratTugas['jenis']) && $suratTugas['jenis'] === 'DD') {
-        if ($current->format('N') < 6) {
-            $durasi++;
-        }
+    $dayOfWeek = $current->format('N'); // 1-5 Mon-Fri, 6 Sat, 7 Sun
+    
+    if ($dayOfWeek == 6 && !$hitungSabtu) {
+        // Jangan dihitung
+    } elseif ($dayOfWeek == 7 && !$hitungMinggu) {
+        // Jangan dihitung
     } else {
         $durasi++;
     }

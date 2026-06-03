@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,11 +21,17 @@
             width: 215mm;
             min-height: 330mm;
             padding: 15mm;
-            padding-top: 6mm !important; /* Batas atas kop 0.6 cm sesuai request */
+            padding-top: 6mm !important;
+            /* Batas atas kop 0.6 cm */
             margin: 20px auto;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             position: relative;
             box-sizing: border-box;
+        }
+
+        /* Halaman kedua (Rincian) otomatis pindah halaman saat cetak */
+        .paper-page2 {
+            page-break-before: always;
         }
 
         /* Kop Surat Resmi Kabupaten Aceh Tamiang */
@@ -81,7 +88,7 @@
             color: #000000;
         }
 
-        /* Judul Kwitansi */
+        /* Judul Kuitansi / Tanda Penerimaan */
         .judul-kuitansi {
             font-size: 16px;
             font-weight: bold;
@@ -97,7 +104,7 @@
             text-align: center;
         }
 
-        /* Detail Kwitansi */
+        /* Detail Kuitansi */
         .kuitansi-row {
             margin-bottom: 12px;
             font-size: 14px;
@@ -133,7 +140,23 @@
             margin: 5px 0;
         }
 
-        /* Tabel Rincian Biaya */
+        /* Kotak Jumlah Uang di Halaman 1 */
+        .jumlah-box {
+            border: 2px solid #000000;
+            padding: 12px 20px;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .jumlah-box .nominal {
+            font-size: 18px;
+            margin-top: 4px;
+        }
+
+        /* Tabel Rincian Biaya (Halaman 2) */
         .table-rincian {
             width: 100%;
             border-collapse: collapse;
@@ -185,7 +208,7 @@
             padding: 12px 24px;
             display: flex;
             justify-content: space-between;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         /* Print Media Queries */
@@ -194,31 +217,33 @@
                 size: 215mm 330mm;
                 margin: 0;
             }
+
             body {
                 background-color: #ffffff;
                 margin: 0;
             }
+
             .paper {
                 box-shadow: none;
                 margin: 0;
                 padding: 15mm !important;
-                padding-top: 6mm !important; /* Batas atas tetap 0.6 cm */
+                padding-top: 6mm !important;
                 width: 215mm;
                 min-height: 330mm;
                 box-sizing: border-box;
             }
+
             .print-toolbar {
                 display: none !important;
             }
+
             #toolbarContainer {
                 display: none !important;
-            }
-            .terbilang-text {
-                /* ensure no box appears in print either */
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Toolbar Cetak -->
@@ -237,33 +262,36 @@
         </div>
     </div>
 
-    <!-- Halaman Kertas Kwitansi -->
+    <!-- ============================================================ -->
+    <!-- HALAMAN 1 : TANDA PENERIMAAN (KUITANSI) -->
+    <!-- ============================================================ -->
     <div class="paper">
-        <!-- Kop Surat Resmi Kabupaten Aceh Tamiang -->
-        <div class="kop-surat">
-            <div class="kop-logo">
-                <img src="<?= base_url('assets/img/logo_aceh_tamiang.png') ?>" alt="Logo Aceh Tamiang">
-            </div>
-            <div class="kop-text-container">
-                <div class="kop-text-1">Pemerintah Kabupaten Aceh Tamiang</div>
-                <div class="kop-text-2">Dinas Pemberdayaan Masyarakat dan Kampung,</div>
-                <div class="kop-text-2">Pemberdayaan Perempuan dan Keluarga Berencana</div>
-                <div class="kop-text-3">
-                    Jl. Ir. H. Juanda, Komplek Perkantoran Pemerintah Kabupaten Aceh Tamiang<br>
-                    Kecamatan Karang Baru Kabupaten Aceh Tamiang Kode Pos 24476
-                </div>
-            </div>
-        </div>
-
-        <!-- Judul Kuitansi -->
-        <div class="judul-kuitansi">KUITANSI PEMBAYARAN</div>
-        <div class="nomor-kuitansi">Nomor Kuitansi: KW-<?= esc($sppd['id']) ?>/<?= esc($sppd['nomor_surat']) ?></div>
+        <!-- Judul Tanda Penerimaan -->
+        <div class="judul-kuitansi" style="margin-top: 80px;">TANDA PENERIMAAN</div>
 
         <!-- Isi Form Kuitansi -->
         <div class="kuitansi-row">
             <div class="kuitansi-label">Sudah Terima Dari</div>
             <div class="kuitansi-separator">:</div>
             <div class="kuitansi-value"><?= isset($bendahara) && $bendahara ? esc($bendahara['jabatan_pejabat']) : 'Bendahara Pengeluaran' ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Nama Penerima</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><b><?= esc($sppd['nama_pegawai']) ?></b></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">NIP</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['nip']) ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Jabatan</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['jabatan']) ?></div>
         </div>
 
         <div class="kuitansi-row">
@@ -281,85 +309,18 @@
             <div class="kuitansi-separator">:</div>
             <div class="kuitansi-value">
                 Biaya Perjalanan Dinas dalam rangka pelaksanaan tugas <b>"<?= esc($sppd['maksud_dinas']) ?>"</b><br>
-                berdasarkan Surat Tugas Nomor: <u><?= esc($sppd['nomor_surat']) ?></u> 
+                berdasarkan Surat Tugas Nomor: <u><?= esc($sppd['nomor_surat']) ?></u>
                 mulai tanggal <?= date('d-m-Y', strtotime($sppd['tanggal_mulai'])) ?> s/d <?= date('d-m-Y', strtotime($sppd['tanggal_selesai'])) ?>.
             </div>
         </div>
 
-        <!-- Tabel Rincian Keuangan Perjalanan Dinas -->
-        <table class="table-rincian">
-            <thead>
-                <tr>
-                    <th style="width: 40px;">No</th>
-                    <th>Rincian Pengeluaran</th>
-                    <th style="width: 140px;">Biaya</th>
-                    <th style="width: 90px;">Satuan</th>
-                    <th style="width: 150px;">Nominal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php $no = 1; ?>
-                
-                <?php if ($sppd['jenis'] === 'DL'): ?>
-                    <?php if (isset($biaya['transport']) && $biaya['transport'] > 0): ?>
-                    <tr>
-                        <td class="text-center"><?= $no++ ?>.</td>
-                        <td>Biaya Transportasi (PP)</td>
-                        <td class="text-end">Rp <?= number_format($biaya['transport'], 0, ',', '.') ?></td>
-                        <td class="text-center">1 Kali</td>
-                        <td class="nominal-col">Rp <?= number_format($biaya['transport'], 0, ',', '.') ?></td>
-                    </tr>
-                    <?php endif; ?>
+        <!-- Kotak Jumlah Uang -->
+        <div class="jumlah-box">
+            <div>Jumlah Uang</div>
+            <div class="nominal">Rp <?= number_format($total_biaya, 0, ',', '.') ?>,-</div>
+        </div>
 
-                    <?php if (isset($biaya['penginapan']) && $biaya['penginapan'] > 0): ?>
-                    <tr>
-                        <td class="text-center"><?= $no++ ?>.</td>
-                        <td>Uang Penginapan / Hotel <?= isset($hotel_option) && $hotel_option === '30' ? '30% (Tanpa Bill)' : '(Reimburse Penuh)' ?></td>
-                        <td class="text-end">Rp <?= number_format($tarif_penginapan ?? $biaya['penginapan'], 0, ',', '.') ?></td>
-                        <td class="text-center"><?= $malam ?> Malam</td>
-                        <td class="nominal-col">Rp <?= number_format($total_penginapan, 0, ',', '.') ?></td>
-                    </tr>
-                    <?php endif; ?>
-
-                    <?php if (isset($biaya['harian']) && $biaya['harian'] > 0): ?>
-                    <tr>
-                        <td class="text-center"><?= $no++ ?>.</td>
-                        <td>Uang Harian</td>
-                        <td class="text-end">Rp <?= number_format($biaya['harian'], 0, ',', '.') ?></td>
-                        <td class="text-center"><?= $durasi ?> Hari</td>
-                        <td class="nominal-col">Rp <?= number_format($total_harian, 0, ',', '.') ?></td>
-                    </tr>
-                    <?php endif; ?>
-
-                    <?php if (isset($biaya['representative']) && $biaya['representative'] > 0): ?>
-                    <tr>
-                        <td class="text-center"><?= $no++ ?>.</td>
-                        <td>Uang Representatif</td>
-                        <td class="text-end">Rp <?= number_format($biaya['representative'], 0, ',', '.') ?></td>
-                        <td class="text-center">1 Kali</td>
-                        <td class="nominal-col">Rp <?= number_format($biaya['representative'], 0, ',', '.') ?></td>
-                    </tr>
-                    <?php endif; ?>
-                <?php elseif ($sppd['jenis'] === 'DD'): ?>
-                    <?php if (isset($biaya['harian']) && $biaya['harian'] > 0): ?>
-                    <tr>
-                        <td class="text-center"><?= $no++ ?>.</td>
-                        <td>Uang Harian</td>
-                        <td class="text-end">Rp <?= number_format($biaya['harian'], 0, ',', '.') ?></td>
-                        <td class="text-center"><?= $durasi ?> Hari</td>
-                        <td class="nominal-col">Rp <?= number_format($total_harian, 0, ',', '.') ?></td>
-                    </tr>
-                    <?php endif; ?>
-                <?php endif; ?>
-
-                <tr style="background-color: #f8fafc; border-top: 2px solid #000000;">
-                    <td colspan="4" class="text-end" style="font-weight: bold; font-size: 14px;">TOTAL BIAYA :</td>
-                    <td class="nominal-col" style="font-size: 14.5px;">Rp <?= number_format($total_biaya, 0, ',', '.') ?></td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Penandatangan 3 Pihak Standar Kwitansi Keuangan Negara -->
+        <!-- Penandatangan 3 Pihak -->
         <div class="signs-container">
             <!-- 1. Bendahara Pengeluaran -->
             <div class="sign-box" style="width: 32%; display: flex; flex-direction: column; justify-content: space-between; min-height: 160px;">
@@ -399,5 +360,146 @@
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!-- HALAMAN 2 : RINCIAN BIAYA PERJALANAN DINAS -->
+    <!-- ============================================================ -->
+    <div class="paper paper-page2">
+        <!-- Judul Rincian Biaya -->
+        <div class="judul-kuitansi" style="margin-top: 80px;">RINCIAN BIAYA PERJALANAN DINAS</div>
+
+        <!-- Informasi Pegawai -->
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Nama</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><b><?= esc($sppd['nama_pegawai']) ?></b></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">NIP</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['nip']) ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Pangkat / Golongan</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['pangkat']) ?> / <?= esc($sppd['golongan']) ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Jabatan</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['jabatan']) ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Tingkat Perjalanan</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['tingkat_biaya']) ?> — <?= $sppd['jenis'] === 'DL' ? 'Dinas Luar' : 'Dinas Dalam' ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Tujuan</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= esc($sppd['tujuan_dinas']) ?></div>
+        </div>
+
+        <div class="kuitansi-row">
+            <div class="kuitansi-label">Lama Perjalanan</div>
+            <div class="kuitansi-separator">:</div>
+            <div class="kuitansi-value"><?= $durasi ?> Hari (<?= date('d-m-Y', strtotime($sppd['tanggal_mulai'])) ?> s/d <?= date('d-m-Y', strtotime($sppd['tanggal_selesai'])) ?>)</div>
+        </div>
+
+        <!-- Tabel Rincian Keuangan Perjalanan Dinas -->
+        <table class="table-rincian">
+            <thead>
+                <tr>
+                    <th style="width: 40px;">No</th>
+                    <th>Rincian Pengeluaran</th>
+                    <th style="width: 140px;">Biaya</th>
+                    <th style="width: 90px;">Satuan</th>
+                    <th style="width: 150px;">Nominal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $no = 1; ?>
+
+                <?php if ($sppd['jenis'] === 'DL'): ?>
+                    <?php if (isset($biaya['transport']) && $biaya['transport'] > 0): ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?>.</td>
+                            <td>Biaya Transportasi (PP)</td>
+                            <td class="text-end">Rp <?= number_format($biaya['transport'], 0, ',', '.') ?></td>
+                            <td class="text-center">1 Kali</td>
+                            <td class="nominal-col">Rp <?= number_format($biaya['transport'], 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endif; ?>
+
+                    <?php if (isset($biaya['penginapan']) && $biaya['penginapan'] > 0): ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?>.</td>
+                            <td>Uang Penginapan / Hotel <?= isset($hotel_option) && $hotel_option === '30' ? '30% (Tanpa Bill)' : '(Reimburse Penuh)' ?></td>
+                            <td class="text-end">Rp <?= number_format($tarif_penginapan ?? $biaya['penginapan'], 0, ',', '.') ?></td>
+                            <td class="text-center"><?= $malam ?> Malam</td>
+                            <td class="nominal-col">Rp <?= number_format($total_penginapan, 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endif; ?>
+
+                    <?php if (isset($biaya['harian']) && $biaya['harian'] > 0): ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?>.</td>
+                            <td>Uang Harian</td>
+                            <td class="text-end">Rp <?= number_format($biaya['harian'], 0, ',', '.') ?></td>
+                            <td class="text-center"><?= $durasi ?> Hari</td>
+                            <td class="nominal-col">Rp <?= number_format($total_harian, 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endif; ?>
+
+                    <?php if (isset($biaya['representative']) && $biaya['representative'] > 0): ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?>.</td>
+                            <td>Uang Representatif</td>
+                            <td class="text-end">Rp <?= number_format($biaya['representative'], 0, ',', '.') ?></td>
+                            <td class="text-center">1 Kali</td>
+                            <td class="nominal-col">Rp <?= number_format($biaya['representative'], 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endif; ?>
+                <?php elseif ($sppd['jenis'] === 'DD'): ?>
+                    <?php if (isset($biaya['harian']) && $biaya['harian'] > 0): ?>
+                        <tr>
+                            <td class="text-center"><?= $no++ ?>.</td>
+                            <td>Uang Harian</td>
+                            <td class="text-end">Rp <?= number_format($biaya['harian'], 0, ',', '.') ?></td>
+                            <td class="text-center"><?= $durasi ?> Hari</td>
+                            <td class="nominal-col">Rp <?= number_format($total_harian, 0, ',', '.') ?></td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endif; ?>
+
+                <tr style="background-color: #f8fafc; border-top: 2px solid #000000;">
+                    <td colspan="4" class="text-end" style="font-weight: bold; font-size: 14px;">TOTAL BIAYA :</td>
+                    <td class="nominal-col" style="font-size: 14.5px;">Rp <?= number_format($total_biaya, 0, ',', '.') ?></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Terbilang -->
+        <div style="font-size: 13.5px; margin-bottom: 30px;">
+            <b>Terbilang:</b> <i>"<?= esc($terbilang) ?>"</i>
+        </div>
+
+        <!-- Tanda Tangan di Halaman Rincian -->
+        <div style="width: 100%; display: flex; justify-content: flex-end; font-size: 13.5px; margin-top: 20px;">
+            <div style="text-align: center; width: 280px;">
+                <div>Karang Baru, <?= date('d F Y', strtotime($sppd['tanggal_surat'])) ?></div>
+                <div style="margin-bottom: 5px;">Penerima,</div>
+                <div style="min-height: 80px;"></div>
+                <div style="font-weight: bold; text-decoration: underline;"><?= esc($sppd['nama_pegawai']) ?></div>
+                <div>NIP. <?= esc($sppd['nip']) ?></div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>

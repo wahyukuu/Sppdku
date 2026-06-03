@@ -23,6 +23,8 @@ class SuratTugasModel extends Model
         'jenis',
         'id_pejabat_ttd',
         'id_user',
+        'hitung_sabtu',
+        'hitung_minggu',
     ];
 
     protected bool $allowEmptyInserts = false;

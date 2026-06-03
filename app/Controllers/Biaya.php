@@ -13,6 +13,10 @@ class Biaya extends BaseController
         $this->biayaModel = new BiayaModel();
     }
 
+    /**
+     * Menampilkan halaman daftar Tarif Biaya Perjalanan Dinas.
+     * Mengambil seluruh data dari tabel biaya dan mengirimkannya ke view `biaya/index`.
+     */
     public function index()
     {
         if (!session()->get('logged_in')) {
@@ -28,6 +32,10 @@ class Biaya extends BaseController
         return view('biaya/index', $data);
     }
 
+    /**
+     * Menampilkan halaman form untuk menambah data Tarif Biaya baru.
+     * Mengarahkan ke view `biaya/create`.
+     */
     public function create()
     {
         if (!session()->get('logged_in')) {
@@ -42,6 +50,10 @@ class Biaya extends BaseController
         return view('biaya/create', $data);
     }
 
+    /**
+     * Memproses data yang dikirimkan dari form tambah Tarif Biaya.
+     * Menyimpan data (tingkat, jenis, tujuan, dll) ke dalam database melalui BiayaModel.
+     */
     public function store()
     {
         if (!session()->get('logged_in')) {
@@ -61,6 +73,10 @@ class Biaya extends BaseController
         return redirect()->to(base_url('biaya'))->with('success', 'Data tingkat biaya berhasil ditambahkan.');
     }
 
+    /**
+     * Menampilkan halaman form untuk mengedit data Tarif Biaya berdasarkan ID.
+     * Mengambil data spesifik dari tabel biaya dan mengirimkannya ke view `biaya/edit`.
+     */
     public function edit($id)
     {
         if (!session()->get('logged_in')) {
@@ -81,6 +97,10 @@ class Biaya extends BaseController
         return view('biaya/edit', $data);
     }
 
+    /**
+     * Memproses pembaruan data Tarif Biaya yang diedit berdasarkan ID.
+     * Mengupdate record di dalam database dengan data baru dari form.
+     */
     public function update($id)
     {
         if (!session()->get('logged_in')) {
@@ -100,6 +120,10 @@ class Biaya extends BaseController
         return redirect()->to(base_url('biaya'))->with('success', 'Data tingkat biaya berhasil diubah.');
     }
 
+    /**
+     * Menghapus data Tarif Biaya berdasarkan ID.
+     * Setelah data dihapus, akan diarahkan kembali ke halaman daftar biaya.
+     */
     public function delete($id)
     {
         if (!session()->get('logged_in')) {

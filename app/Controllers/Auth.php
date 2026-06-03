@@ -13,11 +13,22 @@ class Auth extends BaseController
         $this->userModel = new UserModel();
     }
 
+    /**
+     * Menampilkan halaman form Login.
+     * Mengarahkan ke view `auth/login`.
+     */
     public function login()
     {
         return view('auth/login');
     }
 
+    /**
+     * Memproses data login yang dikirimkan dari form.
+     * Mengecek username di database, lalu memverifikasi password menggunakan bcrypt.
+     * Jika berhasil, menyimpan data session (id_user, nama, role, logged_in)
+     * dan mengarahkan user ke halaman dashboard.
+     * Jika gagal, mengarahkan kembali ke halaman login dengan pesan error.
+     */
     public function processLogin()
     {
         $username = $this->request->getPost('username');
@@ -47,6 +58,10 @@ class Auth extends BaseController
         return redirect()->to(base_url('dashboard'));
     }
 
+    /**
+     * Menghancurkan (destroy) session pengguna yang sedang aktif,
+     * lalu mengarahkan kembali ke halaman login.
+     */
     public function logout()
     {
         session()->destroy();

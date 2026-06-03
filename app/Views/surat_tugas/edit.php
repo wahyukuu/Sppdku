@@ -110,6 +110,26 @@
                 </div>
             </div>
 
+            <!-- CHECKBOX PERHITUNGAN AKHIR PEKAN -->
+            <div class="col-12 mt-2">
+                <label class="form-label d-block mb-2" style="font-weight:600; font-size:14px; color:#1e293b;">Opsi Perhitungan Hari Libur (Akhir Pekan)</label>
+                <div class="d-flex gap-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="hitung_sabtu" value="1" id="hitung_sabtu" <?= !empty($suratTugas['hitung_sabtu']) ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="hitung_sabtu" style="font-size: 13.5px; color:#475569; cursor:pointer;">
+                            Hitung Hari Sabtu
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="hitung_minggu" value="1" id="hitung_minggu" <?= !empty($suratTugas['hitung_minggu']) ? 'checked' : '' ?>>
+                        <label class="form-check-label" for="hitung_minggu" style="font-size: 13.5px; color:#475569; cursor:pointer;">
+                            Hitung Hari Minggu
+                        </label>
+                    </div>
+                </div>
+                <div class="form-text" style="font-size: 11.5px;">Centang opsi di atas jika kegiatan pada hari tersebut tetap ingin dihitung dalam durasi Surat Perjalanan Dinas.</div>
+            </div>
+
             <!-- CHECKBOX PILIH MULTI-PEGAWAI -->
             <div class="col-12 mt-3">
                 <label class="form-label d-block mb-3" style="font-weight:600; font-size:14px; color:#1e293b;">Pilih Pegawai yang Ditugaskan</label>
