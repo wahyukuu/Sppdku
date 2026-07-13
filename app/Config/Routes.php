@@ -15,8 +15,8 @@ $routes->get('/logout', 'Auth::logout');
 // Dashboard route (Auth only)
 $routes->get('/dashboard', 'Dashboard::index', ['filter' => 'auth']);
 
-// Pegawai routes (CRUD - Admin only)
-$routes->group('pegawai', ['filter' => 'admin'], function ($routes) {
+// Pegawai routes (CRUD - Auth only)
+$routes->group('pegawai', ['filter' => 'auth'], function ($routes) {
     $routes->get('/', 'Pegawai::index');
     $routes->get('create', 'Pegawai::create');
     $routes->post('store', 'Pegawai::store');

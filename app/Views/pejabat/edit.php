@@ -57,33 +57,37 @@
                 <div class="mb-3">
                     <label class="form-label d-block" style="font-weight:600; font-size:13px; color:#475569;">Status Penandatangan (TTD)</label>
                     <div class="form-check form-check-inline mt-2">
-                        <input class="form-check-input" type="radio" name="status" id="status_kepala" value="Kepala" <?= ($pejabat['status'] === 'Kepala') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status_kepala">Kepala (Definitif)</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_pa" value="Pengguna Anggaran" <?= ($pejabat['status'] === 'Pengguna Anggaran') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status_pa">Pengguna Anggaran</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_bp" value="Bendahara Pengeluaran" <?= ($pejabat['status'] === 'Bendahara Pengeluaran') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status_bp">Bendahara Pengeluaran</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_pb" value="Pengurus Barang" <?= ($pejabat['status'] === 'Pengurus Barang') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status_pb">Pengurus Barang</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_pptk" value="PPTK" <?= ($pejabat['status'] === 'PPTK') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status_pptk">PPTK</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status1" value="Plt." <?= ($pejabat['status'] === 'Plt.') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status1">Plt. (Pelaksana Tugas)</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status2" value="Plh." <?= ($pejabat['status'] === 'Plh.') ? 'checked' : '' ?>>
-                        <label class="form-check-label" for="status2">Plh. (Pelaksana Harian)</label>
-                    </div>
+    <input class="form-check-input" type="radio" name="status" id="status_kepala" value="Kepala" <?= ($pejabat['status'] === 'Kepala') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status_kepala">Kepala (Definitif)</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_pa" value="Pengguna Anggaran" <?= ($pejabat['status'] === 'Pengguna Anggaran') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status_pa">Pengguna Anggaran</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_bp" value="Bendahara Pengeluaran" <?= ($pejabat['status'] === 'Bendahara Pengeluaran') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status_bp">Bendahara Pengeluaran</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_pb" value="Pengurus Barang" <?= ($pejabat['status'] === 'Pengurus Barang') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status_pb">Pengurus Barang</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_pptk" value="PPTK" <?= ($pejabat['status'] === 'PPTK') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status_pptk">PPTK</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status1" value="Plt." <?= ($pejabat['status'] === 'Plt.') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status1">Plt. (Pelaksana Tugas)</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status2" value="Plh." <?= ($pejabat['status'] === 'Plh.') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status2">Plh. (Pelaksana Harian)</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_atasnama" value="Atas Nama" <?= ($pejabat['status'] === 'Atas Nama') ? 'checked' : '' ?>>
+    <label class="form-check-label" for="status_atasnama">Atas Nama</label>
+</div>
                 </div>
             </div>
             

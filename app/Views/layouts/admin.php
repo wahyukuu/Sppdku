@@ -321,14 +321,14 @@
                 <span>Dashboard</span>
             </a>
             
+            <div class="sidebar-menu-title">Data Master</div>
+            
+            <a href="<?=base_url('pegawai')?>" class="nav-link <?= ($activeMenu === 'pegawai') ? 'active' : '' ?>">
+                <i data-lucide="user"></i>
+                <span>Data Pegawai</span>
+            </a>
+            
             <?php if (session()->get('role') === 'admin') : ?>
-                <div class="sidebar-menu-title">Data Master</div>
-                
-                <a href="<?=base_url('pegawai')?>" class="nav-link <?= ($activeMenu === 'pegawai') ? 'active' : '' ?>">
-                    <i data-lucide="user"></i>
-                    <span>Data Pegawai</span>
-                </a>
-                
                 <a href="<?=base_url('pejabat')?>" class="nav-link <?= ($activeMenu === 'pejabat') ? 'active' : '' ?>">
                     <i data-lucide="briefcase"></i>
                     <span>Data Pejabat</span>

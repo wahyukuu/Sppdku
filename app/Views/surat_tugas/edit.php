@@ -97,12 +97,34 @@
                 </div>
             </div>
 
+            <div class="col-12 col-md-12">
+                <div class="mb-3">
+                    <label class="form-label d-block" style="font-weight:600; font-size:13px; color:#475569;">Jenis Penandatangan</label>
+                    <div class="form-check form-check-inline mt-1">
+                        <input class="form-check-input" type="radio" name="filter_pejabat" id="filter_semua" value="semua" checked onchange="filterPejabat()">
+                        <label class="form-check-label" for="filter_semua">Semua</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter_pejabat" id="filter_definitif" value="definitif" onchange="filterPejabat()">
+                        <label class="form-check-label" for="filter_definitif">Definitif</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter_pejabat" id="filter_nota_dinas" value="nota_dinas" onchange="filterPejabat()">
+                        <label class="form-check-label" for="filter_nota_dinas">Nota Dinas (Plt/Plh)</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="filter_pejabat" id="filter_atas_nama" value="atas_nama" onchange="filterPejabat()">
+                        <label class="form-check-label" for="filter_atas_nama">Atas Nama</label>
+                    </div>
+                </div>
+            </div>
+
             <div class="col-12">
                 <div class="mb-3">
                     <label for="id_pejabat_ttd" class="form-label" style="font-weight:600; font-size:13px; color:#475569;">Pejabat Penandatangan Surat</label>
                     <select name="id_pejabat_ttd" id="id_pejabat_ttd" class="form-select form-control-premium" required>
                         <?php foreach ($pejabat as $pj) : ?>
-                            <option value="<?= $pj['id'] ?>" <?= ($suratTugas['id_pejabat_ttd'] == $pj['id']) ? 'selected' : '' ?>>
+                            <option value="<?= $pj['id'] ?>" data-status="<?= esc($pj['status']) ?>" <?= ($suratTugas['id_pejabat_ttd'] == $pj['id']) ? 'selected' : '' ?>>
                                 <?= esc($pj['nama_pegawai']) ?> (Status: <?= esc($pj['status']) ?> - <?= esc($pj['jabatan']) ?>)
                             </option>
                         <?php endforeach; ?>
@@ -161,6 +183,44 @@
 </div>
 
 <script>
+function filterPejabat() {
+    const filter = document.querySelector('input[name="filter_pejabat"]:checked').value;
+    const select = document.getElementById('id_pejabat_ttd');
+    const options = select.querySelectorAll('option');
+    
+    let currentSelectedHidden = false;
+
+    options.forEach(option => {
+        const status = option.getAttribute('data-status');
+        let show = false;
+        
+        if (filter === 'semua') {
+            show = true;
+        } else if (filter === 'definitif' && !['Plt.', 'Plh.', 'Atas Nama'].includes(status)) {
+            show = true;
+        } else if (filter === 'nota_dinas' && ['Plt.', 'Plh.'].includes(status)) {
+            show = true;
+        } else if (filter === 'atas_nama' && status === 'Atas Nama') {
+            show = true;
+        }
+        
+        if (show) {
+            option.style.display = '';
+        } else {
+            option.style.display = 'none';
+            if (option.selected) currentSelectedHidden = true;
+        }
+    });
+    
+    if (currentSelectedHidden) {
+        select.value = "";
+        const firstVisibleOption = Array.from(options).find(opt => opt.style.display !== 'none');
+        if (firstVisibleOption) {
+            select.value = firstVisibleOption.value;
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('tujuan-container');
     const btnAdd = document.getElementById('btn-add-tujuan');
@@ -207,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+    
+    filterPejabat();
 });
 </script>
 

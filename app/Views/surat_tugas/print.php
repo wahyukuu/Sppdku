@@ -141,6 +141,7 @@ function tanggalIndo($date) {
             text-align: center;
             margin-bottom: 30px;
             text-transform: uppercase;
+            white-space: pre-wrap;
         }
 
         /* Konten Isi Dokumen */
@@ -262,7 +263,7 @@ function tanggalIndo($date) {
 
         <!-- Judul Dokumen SPT -->
         <div class="judul-spt">SURAT TUGAS</div>
-        <div class="nomor-spt">NOMOR : <?= esc($suratTugas['nomor_surat']) ?></div>
+        <div class="nomor-spt">NOMOR : <?= str_replace(' ', '&nbsp;', esc($suratTugas['nomor_surat'])) ?></div>
 
         <!-- Dasar Penugasan -->
         <div class="spt-label-row">
@@ -331,14 +332,43 @@ function tanggalIndo($date) {
                         </div>
                     <?php endif; ?>
                     <?php 
-                        $jabatan_clean = str_replace('&', 'dan', $pejabat['jabatan']);
-                        $jabatan_parts = explode(' Kabupaten Aceh Tamiang', $jabatan_clean);
-                        $jabatan_utama = esc($jabatan_parts[0]);
-                        $kabupaten = count($jabatan_parts) > 1 ? 'Kabupaten Aceh Tamiang' . esc($jabatan_parts[1]) : '';
+                        $raw_jabatan = str_replace('&', 'dan', $pejabat['jabatan']);
+                        $jabatan_clean = esc($raw_jabatan);
+                        
+                        $target1 = esc("Kepala Dinas Pemberdayaan Masyarakat dan Kampung, Pemberdayaan Perempuan dan Keluarga Berencana Kabupaten Aceh Tamiang");
+                        $replace1 = "Kepala Dinas Pemberdayaan Masyarakat<br>dan Kampung, Pemberdayaan Perempuan<br>dan Keluarga Berencana<br>Kabupaten Aceh Tamiang";
+                        
+                        $target2 = esc("Kepala Dinas Pemberdayaan Masyarakat dan Kampung, Pemberdayaan Perempuan dan Keluarga Berencana");
+                        $replace2 = "Kepala Dinas Pemberdayaan Masyarakat<br>dan Kampung, Pemberdayaan Perempuan<br>dan Keluarga Berencana";
+                        
+                        $jabatan_clean = str_ireplace($target1, $replace1, $jabatan_clean);
+                        $jabatan_clean = str_ireplace($target2, $replace2, $jabatan_clean);
                     ?>
-                    <div style="text-align: justify;"><?= $jabatan_utama ?></div>
-                    <?php if ($kabupaten) : ?>
-                        <div><?= $kabupaten ?></div>
+                    <?php if ($pejabat['status'] === 'Atas Nama') : ?>
+                        <?php 
+                            $jabatan_text = $jabatan_clean;
+                            $jabatan_text = preg_replace('/Kabupaten Aceh Tamiang,\s*/i', 'Kabupaten Aceh Tamiang<br>', $jabatan_text);
+                            $jabatan_text = preg_replace('/BUPATI ACEH TAMIANG,\s*/i', 'BUPATI ACEH TAMIANG<br>', $jabatan_text);
+                            
+                            if (strpos($jabatan_text, '<br>') === false && strpos($jabatan_text, ',') !== false) {
+                                $parts = explode(',', $jabatan_text, 2);
+                                $jabatan_text = trim($parts[0]) . '<br>' . trim($parts[1]);
+                            }
+                        ?>
+                        <div style="position: absolute; right: 100%; margin-right: 8px; white-space: nowrap;">a.n.</div>
+                        <div style="text-align: left;"><?= $jabatan_text ?></div>
+                    <?php else : ?>
+                        <?php
+                            if (strpos($jabatan_clean, '<br>') !== false) {
+                                $jabatan_final = $jabatan_clean;
+                            } else {
+                                $jabatan_parts = explode(' Kabupaten Aceh Tamiang', $jabatan_clean);
+                                $jabatan_utama = $jabatan_parts[0];
+                                $kabupaten = count($jabatan_parts) > 1 ? 'Kabupaten Aceh Tamiang' . $jabatan_parts[1] : '';
+                                $jabatan_final = $jabatan_utama . ($kabupaten ? '<br>' . $kabupaten : '');
+                            }
+                        ?>
+                        <div style="text-align: left;"><?= $jabatan_final ?></div>
                     <?php endif; ?>
                 </div>
                 <div style="height: 75px;"></div>

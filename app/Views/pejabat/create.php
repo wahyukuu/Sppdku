@@ -56,33 +56,37 @@
                 <div class="mb-3">
                     <label class="form-label d-block" style="font-weight:600; font-size:13px; color:#475569;">Status Penandatangan (TTD)</label>
                     <div class="form-check form-check-inline mt-2">
-                        <input class="form-check-input" type="radio" name="status" id="status_kepala" value="Kepala" checked>
-                        <label class="form-check-label" for="status_kepala">Kepala (Definitif)</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_pa" value="Pengguna Anggaran">
-                        <label class="form-check-label" for="status_pa">Pengguna Anggaran</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_bp" value="Bendahara Pengeluaran">
-                        <label class="form-check-label" for="status_bp">Bendahara Pengeluaran</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_pb" value="Pengurus Barang">
-                        <label class="form-check-label" for="status_pb">Pengurus Barang</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status_pptk" value="PPTK">
-                        <label class="form-check-label" for="status_pptk">PPTK</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status1" value="Plt.">
-                        <label class="form-check-label" for="status1">Plt. (Pelaksana Tugas)</label>
-                    </div>
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="radio" name="status" id="status2" value="Plh.">
-                        <label class="form-check-label" for="status2">Plh. (Pelaksana Harian)</label>
-                    </div>
+    <input class="form-check-input" type="radio" name="status" id="status_kepala" value="Kepala" checked>
+    <label class="form-check-label" for="status_kepala">Kepala (Definitif)</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_pa" value="Pengguna Anggaran">
+    <label class="form-check-label" for="status_pa">Pengguna Anggaran</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_bp" value="Bendahara Pengeluaran">
+    <label class="form-check-label" for="status_bp">Bendahara Pengeluaran</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_pb" value="Pengurus Barang">
+    <label class="form-check-label" for="status_pb">Pengurus Barang</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_pptk" value="PPTK">
+    <label class="form-check-label" for="status_pptk">PPTK</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status1" value="Plt.">
+    <label class="form-check-label" for="status1">Plt. (Pelaksana Tugas)</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status2" value="Plh.">
+    <label class="form-check-label" for="status2">Plh. (Pelaksana Harian)</label>
+</div>
+<div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="status" id="status_atasnama" value="Atas Nama">
+    <label class="form-check-label" for="status_atasnama">Atas Nama</label>
+</div>
                 </div>
             </div>
             
