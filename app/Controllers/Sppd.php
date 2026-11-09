@@ -35,9 +35,10 @@ class Sppd extends BaseController
         }
 
         $sppd = $this->sppdModel
-            ->select('sppd.*, surat_tugas.nomor_surat, surat_tugas.tanggal_mulai, surat_tugas.tanggal_selesai, pegawai.nama as nama_pegawai, pegawai.nip')
+            ->select('sppd.*, surat_tugas.nomor_surat, surat_tugas.tanggal_mulai, surat_tugas.tanggal_selesai, surat_tugas.status as status_st, pegawai.nama as nama_pegawai, pegawai.nip')
             ->join('surat_tugas', 'surat_tugas.id = sppd.id_surat_tugas')
             ->join('pegawai', 'pegawai.id_pegawai = sppd.id_pegawai')
+            ->where('surat_tugas.status !=', 'diarsipkan')
             ->orderBy('sppd.created_at', 'DESC')
             ->findAll();
 

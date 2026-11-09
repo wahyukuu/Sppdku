@@ -23,6 +23,7 @@
                     <th>Tanggal Pelaksanaan</th>
                     <th>Jenis</th>
                     <th>Penandatangan</th>
+                    <th>Status</th>
                     <th style="width: 150px;" class="text-center">Aksi</th>
                 </tr>
             </thead>
@@ -67,17 +68,33 @@
                             <td>
                                 <div style="font-weight:550; font-size:13px;"><?= esc($st['nama_pejabat']) ?></div>
                             </td>
+                            <td>
+                                <?php
+                                $s = $st['status'] ?? 'aktif';
+                                if ($s === 'aktif') echo '<span class="badge bg-success px-2 py-1 rounded-pill" style="font-size:11px;">Aktif</span>';
+                                elseif ($s === 'selesai') echo '<span class="badge bg-primary px-2 py-1 rounded-pill" style="font-size:11px;">Selesai</span>';
+                                else echo '<span class="badge bg-secondary px-2 py-1 rounded-pill" style="font-size:11px;">Diarsipkan</span>';
+                                ?>
+                            </td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center justify-content-center gap-2">
-                                    <a href="<?= base_url('surat-tugas/print/' . $st['id']) ?>" target="_blank" class="btn btn-sm btn-outline-success" style="border-radius: 8px;" title="Cetak SPT">
-                                        <i data-lucide="printer"></i>
-                                    </a>
-                                    <a href="<?= base_url('surat-tugas/edit/' . $st['id']) ?>" class="btn btn-sm btn-outline-primary" style="border-radius: 8px;" title="Edit Surat Tugas">
-                                        <i data-lucide="edit"></i>
-                                    </a>
-                                    <button onclick="confirmDelete(<?= $st['id'] ?>)" class="btn btn-sm btn-outline-danger" style="border-radius: 8px;" title="Hapus Surat Tugas">
-                                        <i data-lucide="trash-2"></i>
-                                    </button>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 8px; padding: 4px 8px;">
+                                            <i data-lucide="settings"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="<?= base_url('surat-tugas/print/' . $st['id']) ?>" target="_blank"><i data-lucide="printer" class="me-2" style="width:16px;"></i> Cetak SPT</a></li>
+                                            <li><a class="dropdown-item" href="<?= base_url('surat-tugas/edit/' . $st['id']) ?>"><i data-lucide="edit" class="me-2" style="width:16px;"></i> Edit</a></li>
+                                            <li><hr class="dropdown-divider"></li>
+                                            <?php if (($st['status'] ?? 'aktif') === 'aktif') : ?>
+                                                <li><a class="dropdown-item text-primary" href="<?= base_url('surat-tugas/status/' . $st['id'] . '/selesai') ?>"><i data-lucide="check-circle" class="me-2" style="width:16px;"></i> Tandai Selesai</a></li>
+                                            <?php endif; ?>
+                                            <?php if (($st['status'] ?? 'aktif') === 'selesai') : ?>
+                                                <li><a class="dropdown-item text-secondary" href="<?= base_url('surat-tugas/status/' . $st['id'] . '/diarsipkan') ?>"><i data-lucide="archive" class="me-2" style="width:16px;"></i> Arsipkan</a></li>
+                                            <?php endif; ?>
+                                            <li><button class="dropdown-item text-danger" onclick="confirmDelete(<?= $st['id'] ?>)"><i data-lucide="trash-2" class="me-2" style="width:16px;"></i> Hapus</button></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </td>
                         </tr>

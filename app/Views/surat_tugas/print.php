@@ -263,7 +263,10 @@ function tanggalIndo($date) {
 
         <!-- Judul Dokumen SPT -->
         <div class="judul-spt">SURAT TUGAS</div>
-        <div class="nomor-spt">NOMOR : <?= str_replace(' ', '&nbsp;', esc($suratTugas['nomor_surat'])) ?></div>
+        <?php 
+            $nomorSptFormatted = preg_replace('~/\s*/~', '/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /', $suratTugas['nomor_surat'] ?? '');
+        ?>
+        <div class="nomor-spt">NOMOR : <?= str_replace(' ', '&nbsp;', esc($nomorSptFormatted)) ?></div>
 
         <!-- Dasar Penugasan -->
         <div class="spt-label-row">

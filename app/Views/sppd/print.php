@@ -1,25 +1,59 @@
 <?php
-function terbilangDurasi($number) {
+function terbilangDurasi($number)
+{
     $words = [
-        1 => 'Satu', 2 => 'Dua', 3 => 'Tiga', 4 => 'Empat', 5 => 'Lima',
-        6 => 'Enam', 7 => 'Tujuh', 8 => 'Delapan', 9 => 'Sembilan', 10 => 'Sepuluh',
-        11 => 'Sebelas', 12 => 'Dua Belas', 13 => 'Tiga Belas', 14 => 'Empat Belas', 15 => 'Lima Belas'
+        1 => 'Satu',
+        2 => 'Dua',
+        3 => 'Tiga',
+        4 => 'Empat',
+        5 => 'Lima',
+        6 => 'Enam',
+        7 => 'Tujuh',
+        8 => 'Delapan',
+        9 => 'Sembilan',
+        10 => 'Sepuluh',
+        11 => 'Sebelas',
+        12 => 'Dua Belas',
+        13 => 'Tiga Belas',
+        14 => 'Empat Belas',
+        15 => 'Lima Belas'
     ];
     return $words[$number] ?? '';
 }
 
-function tanggalIndo($date) {
+function tanggalIndo($date)
+{
     if (empty($date)) return '';
     $bulan = [
-        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        1 => 'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
     ];
     $split = explode('-', date('Y-m-d', strtotime($date)));
     return $split[2] . ' ' . $bulan[(int)$split[1]] . ' ' . $split[0];
 }
+
+function formatNomorSppd($nomor)
+{
+    if (empty($nomor)) return '';
+    // Berikan ruang spasi kosong di antara tanda "//" atau "/ /"
+    // agar nomor surat dapat ditulis secara manual dengan leluasa
+    $formatted = preg_replace('~/\s*/~', '/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /', $nomor);
+    return str_replace(' ', '&nbsp;', $formatted);
+}
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,9 +74,10 @@ function tanggalIndo($date) {
             width: 215mm;
             min-height: 330mm;
             padding: 7.5mm;
-            padding-top: 6mm !important; /* Batas atas kop 0.6 cm sesuai request */
+            padding-top: 6mm !important;
+            /* Batas atas kop 0.6 cm sesuai request */
             margin: 20px auto;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             position: relative;
             box-sizing: border-box;
         }
@@ -127,7 +162,8 @@ function tanggalIndo($date) {
             margin-bottom: 20px;
         }
 
-        .table-spd th, .table-spd td {
+        .table-spd th,
+        .table-spd td {
             border: 1px solid #000000;
             padding: 6px 8px;
             vertical-align: top;
@@ -146,13 +182,17 @@ function tanggalIndo($date) {
         .table-pengikut {
             width: 100%;
             border-collapse: collapse;
-            margin: 0; /* Rapikan garis kelebihan */
+            margin: 0;
+            /* Rapikan garis kelebihan */
             border: none;
         }
-        .table-pengikut th, .table-pengikut td {
+
+        .table-pengikut th,
+        .table-pengikut td {
             border: none;
             padding: 6px 8px;
         }
+
         .table-pengikut th {
             border-bottom: 1px solid #000000;
             font-weight: normal;
@@ -199,7 +239,7 @@ function tanggalIndo($date) {
             padding: 12px 24px;
             display: flex;
             justify-content: space-between;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
 
         /* Print Media Queries */
@@ -208,31 +248,38 @@ function tanggalIndo($date) {
                 size: 215mm 330mm;
                 margin: 0;
             }
+
             body {
                 background-color: #ffffff;
                 margin: 0;
             }
+
             .paper {
                 box-shadow: none;
                 margin: 0;
                 padding: 7.5mm !important;
-                padding-top: 6mm !important; /* Batas atas tetap 0.6 cm */
+                padding-top: 6mm !important;
+                /* Batas atas tetap 0.6 cm */
                 width: 215mm;
                 min-height: 330mm;
                 box-sizing: border-box;
             }
+
             .page-break {
                 page-break-before: always;
             }
+
             .print-toolbar {
                 display: none !important;
             }
+
             #toolbarContainer {
                 display: none !important;
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Toolbar Cetak -->
@@ -252,277 +299,276 @@ function tanggalIndo($date) {
     </div>
 
     <?php foreach ($allSppd as $index => $sppd) : ?>
-    <?php
-    $pengikut = array_filter($allPegawaiSPT, function($p) use ($sppd) {
-        return $p['id_pegawai'] != $sppd['id_pegawai'];
-    });
-    ?>
-    <!-- HALAMAN 1: RINCIAN SURAT PERJALANAN DINAS -->
-    <div class="paper <?= $index > 0 ? 'page-break' : '' ?>">
-        <!-- Kop Surat Resmi Kabupaten Aceh Tamiang -->
-        <div class="kop-surat">
-            <div class="kop-logo">
-                <?php helper('url'); ?>
-                <img src="<?= base_url('assets/img/logo_aceh_tamiang.png') ?>" alt="Logo Aceh Tamiang">
-            </div>
-            <div class="kop-text-container">
-                <div class="kop-text-1">Pemerintah Kabupaten Aceh Tamiang</div>
-                <div class="kop-text-2">Dinas Pemberdayaan Masyarakat dan Kampung,</div>
-                <div class="kop-text-2">Pemberdayaan Perempuan dan Keluarga Berencana</div>
-                <div class="kop-text-3">
-                    Jl. Ir. H. Juanda, Komplek Perkantoran Pemerintah Kabupaten Aceh Tamiang<br>
-                    Kecamatan Karang Baru Kabupaten Aceh Tamiang Kode Pos 24476
-                </div>
-            </div>
-        </div>
-
-        <!-- Lembar & Nomor Kertas (Float Kanan Atas, Pindah di Bawah Kop) -->
-        <div style="float: right; text-align: left; font-size: 12px; font-family: 'Bookman Old Style', serif; line-height: 1.3; margin-bottom: 10px;">
-            Lembar ke : 1<br>
-            Kode No   : <br>
-            Nomor     : <?= esc($sppd['nomor_surat']) ?>
-        </div>
-        <div style="clear: both;"></div>
-
-        <!-- Judul SPPD -->
-        <div class="text-center">
-            <div class="judul-spd">SURAT PERJALANAN DINAS (SPD)</div>
-            <div class="nomor-spd">Nomor : <?= esc($sppd['nomor_surat']) ?></div>
-        </div>
-
-        <!-- Tabel Perincian SPPD -->
-        <table class="table-spd">
-            <tbody>
-                <tr>
-                    <td class="no-col">1.</td>
-                    <td class="label-col">Pengguna Anggaran</td>
-                    <td><?= esc($pejabat['nama']) ?></td>
-                </tr>
-                <tr>
-                    <td class="no-col">2.</td>
-                    <td class="label-col">Nama / NIP Pegawai yang melaksanakan perjalanan dinas</td>
-                    <td>
-                        <?= esc($sppd['nama_pegawai']) ?><br>
-                        NIP. <?= esc($sppd['nip']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="no-col">3.</td>
-                    <td class="label-col">
-                        a. Pangkat<br>
-                        b. Jabatan / Instansi<br>
-                        c. Tingkat biaya perjalanan dinas
-                    </td>
-                    <td>
-                        a. <?= esc($sppd['pangkat']) ?> (<?= esc($sppd['golongan']) ?>)<br>
-                        b. <?= esc($sppd['jabatan']) ?> / DPMKPPKB<br>
-                        c. <?= esc($sppd['tingkat_biaya']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="no-col">4.</td>
-                    <td class="label-col">Maksud Perjalanan Dinas</td>
-                    <td><?= esc($sppd['maksud_dinas']) ?></td>
-                </tr>
-                <tr>
-                    <td class="no-col">5.</td>
-                    <td class="label-col">Alat angkutan yang digunakan</td>
-                    <td>Kendaraan Umum</td>
-                </tr>
-                <tr>
-                    <td class="no-col">6.</td>
-                    <td class="label-col">
-                        a. Tempat berangkat<br>
-                        b. Tempat tujuan
-                    </td>
-                    <td>
-                        a. Karang Baru<br>
-                        b. <?= esc($sppd['tujuan_dinas']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="no-col">7.</td>
-                    <td class="label-col">
-                        a. Lamanya perjalanan dinas<br>
-                        b. Tanggal berangkat<br>
-                        c. Tanggal harus Kembali / tiba ditempat baru *)
-                    </td>
-                    <td>
-                        a. <?= $durasi ?> (<?= terbilangDurasi($durasi) ?>) Hari<br>
-                        b. <?= tanggalIndo($sppd['tanggal_mulai']) ?><br>
-                        c. <?= tanggalIndo($sppd['tanggal_selesai']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="no-col">8.</td>
-                    <td class="label-col" style="padding: 0; vertical-align: middle;">
-                        <div style="padding: 6px 8px;">Pengikut: Nama</div>
-                    </td>
-                    <td style="padding: 0;">
-                        <table class="table-pengikut">
-                            <thead>
-                                <tr>
-                                    <th style="border-right: 1px solid #000; width: 50%; padding-left: 8px;">Nama</th>
-                                    <th style="border-right: 1px solid #000; width: 25%; padding-left: 8px;">Tanggal Lahir</th>
-                                    <th style="padding-left: 8px;">Keterangan</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="border-right: 1px solid #000; height: 35px;"></td>
-                                    <td style="border-right: 1px solid #000; height: 35px;"></td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="no-col">9.</td>
-                    <td class="label-col">
-                        Pembebanan Anggaran<br>
-                        a. Instansi<br>
-                        b. Akun
-                    </td>
-                    <td>
-                        <br>
-                        a. DPMKPPKB<br>
-                        b.
-                    </td>
-                </tr>
-                <tr>
-                    <td class="no-col">10.</td>
-                    <td class="label-col">Keterangan lain-lain</td>
-                    <td>-</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Keterangan Coretan & Footer TTD -->
-        <div style="font-size: 11px; font-style: italic;">*coret yang tidak perlu</div>
-
-        <div class="ttd-container">
-            <div class="ttd-box">
-                <div>Dikeluarkan di : Karang Baru</div>
-                <div class="mb-3">Tanggal : <?= tanggalIndo($sppd['tanggal_surat']) ?></div>
-                <div style="font-weight: bold; text-transform: uppercase;">
-                    PENGGUNA ANGGARAN
-                </div>
-                <div style="height: 65px;"></div> <!-- Area Tanda Tangan -->
-                <div style="font-weight: bold; text-decoration: underline;"><?= esc($pejabat['nama']) ?></div>
-                <div>NIP. <?= esc($pejabat['nip']) ?></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- HALAMAN 2: VISUM / STEMPEL KELUAR-MASUK -->
-    <div class="paper page-break">
-        <!-- Tabel Visum Keberangkatan & Kedatangan -->
         <?php
-        $dests = [];
-        if (!empty($destinations)) {
-            foreach ($destinations as $d) {
-                if (!empty(trim($d['tujuan']))) {
-                    $dests[] = trim($d['tujuan']);
+        $pengikut = array_filter($allPegawaiSPT, function ($p) use ($sppd) {
+            return $p['id_pegawai'] != $sppd['id_pegawai'];
+        });
+        ?>
+        <!-- HALAMAN 1: RINCIAN SURAT PERJALANAN DINAS -->
+        <div class="paper <?= $index > 0 ? 'page-break' : '' ?>">
+            <!-- Kop Surat Resmi Kabupaten Aceh Tamiang -->
+            <div class="kop-surat">
+                <div class="kop-logo">
+                    <?php helper('url'); ?>
+                    <img src="<?= base_url('assets/img/logo_aceh_tamiang.png') ?>" alt="Logo Aceh Tamiang">
+                </div>
+                <div class="kop-text-container">
+                    <div class="kop-text-1">Pemerintah Kabupaten Aceh Tamiang</div>
+                    <div class="kop-text-2">Dinas Pemberdayaan Masyarakat dan Kampung,</div>
+                    <div class="kop-text-2">Pemberdayaan Perempuan dan Keluarga Berencana</div>
+                    <div class="kop-text-3">
+                        Jl. Ir. H. Juanda, Komplek Perkantoran Pemerintah Kabupaten Aceh Tamiang<br>
+                        Kecamatan Karang Baru Kabupaten Aceh Tamiang Kode Pos 24476
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lembar & Nomor Kertas (Float Kanan Atas, Pindah di Bawah Kop) -->
+            <div style="float: right; text-align: left; font-size: 12px; font-family: 'Bookman Old Style', serif; line-height: 1.3; margin-bottom: 10px;">
+                Lembar ke : 1<br>
+                Kode No : <br>
+                Nomor : <?= formatNomorSppd(esc($sppd['nomor_surat'])) ?>
+            </div>
+            <div style="clear: both;"></div>
+
+            <!-- Judul SPPD -->
+            <div class="text-center">
+                <div class="judul-spd">SURAT PERJALANAN DINAS (SPD)</div>
+                <div class="nomor-spd">Nomor : <?= formatNomorSppd(esc($sppd['nomor_surat'])) ?></div>
+            </div>
+
+            <!-- Tabel Perincian SPPD -->
+            <table class="table-spd">
+                <tbody>
+                    <tr>
+                        <td class="no-col">1.</td>
+                        <td class="label-col">Pengguna Anggaran</td>
+                        <td><?= esc($pejabat['nama']) ?></td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">2.</td>
+                        <td class="label-col">Nama / NIP Pegawai yang melaksanakan perjalanan dinas</td>
+                        <td>
+                            <?= esc($sppd['nama_pegawai']) ?><br>
+                            NIP. <?= esc($sppd['nip']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">3.</td>
+                        <td class="label-col">
+                            a. Pangkat<br>
+                            b. Jabatan / Instansi<br>
+                            c. Tingkat biaya perjalanan dinas
+                        </td>
+                        <td>
+                            a. <?= esc($sppd['pangkat']) ?> (<?= esc($sppd['golongan']) ?>)<br>
+                            b. <?= esc($sppd['jabatan']) ?> / DPMKPPKB<br>
+                            c. <?= esc($sppd['tingkat_biaya']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">4.</td>
+                        <td class="label-col">Maksud Perjalanan Dinas</td>
+                        <td><?= esc($sppd['maksud_dinas']) ?></td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">5.</td>
+                        <td class="label-col">Alat angkutan yang digunakan</td>
+                        <td>Kendaraan Umum</td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">6.</td>
+                        <td class="label-col">
+                            a. Tempat berangkat<br>
+                            b. Tempat tujuan
+                        </td>
+                        <td>
+                            a. Karang Baru<br>
+                            b. <?= esc($sppd['tujuan_dinas']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">7.</td>
+                        <td class="label-col">
+                            a. Lamanya perjalanan dinas<br>
+                            b. Tanggal berangkat<br>
+                            c. Tanggal harus Kembali / tiba ditempat baru *)
+                        </td>
+                        <td>
+                            a. <?= $durasi ?> (<?= terbilangDurasi($durasi) ?>) Hari<br>
+                            b. <?= tanggalIndo($sppd['tanggal_mulai']) ?><br>
+                            c. <?= tanggalIndo($sppd['tanggal_selesai']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">8.</td>
+                        <td class="label-col" style="vertical-align: top;">Pengikut</td>
+                        <td style="padding: 0;">
+                            <table class="table-pengikut">
+                                <thead>
+                                    <tr>
+                                        <th style="border-right: 1px solid #000; width: 50%; padding-left: 8px;">Nama</th>
+                                        <th style="border-right: 1px solid #000; width: 25%; padding-left: 8px;">Tanggal Lahir</th>
+                                        <th style="padding-left: 8px;">Keterangan</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border-right: 1px solid #000; height: 35px;"></td>
+                                        <td style="border-right: 1px solid #000; height: 35px;"></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">9.</td>
+                        <td class="label-col">
+                            Pembebanan Anggaran<br>
+                            a. Instansi<br>
+                            b. Akun
+                        </td>
+                        <td>
+                            <br>
+                            a. DPMKPPKB<br>
+                            b.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="no-col">10.</td>
+                        <td class="label-col">Keterangan lain-lain</td>
+                        <td>-</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Keterangan Coretan & Footer TTD -->
+            <div style="font-size: 11px; font-style: italic;">*coret yang tidak perlu</div>
+
+            <div class="ttd-container">
+                <div class="ttd-box">
+                    <div>Dikeluarkan di : Karang Baru</div>
+                    <div class="mb-3">Tanggal : <?= tanggalIndo($sppd['tanggal_surat']) ?></div>
+                    <div style="font-weight: bold; text-transform: uppercase;">
+                        PENGGUNA ANGGARAN
+                    </div>
+                    <div style="height: 65px;"></div> <!-- Area Tanda Tangan -->
+                    <div style="font-weight: bold; text-decoration: underline;"><?= esc($pejabat['nama']) ?></div>
+                    <div>NIP. <?= esc($pejabat['nip']) ?></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HALAMAN 2: VISUM / STEMPEL KELUAR-MASUK -->
+        <div class="paper page-break">
+            <!-- Tabel Visum Keberangkatan & Kedatangan -->
+            <?php
+            $dests = [];
+            if (!empty($destinations)) {
+                foreach ($destinations as $d) {
+                    if (!empty(trim($d['tujuan']))) {
+                        $dests[] = trim($d['tujuan']);
+                    }
                 }
             }
-        }
-        if (empty($dests)) {
-            $dests[] = !empty($sppd['tujuan_dinas']) ? $sppd['tujuan_dinas'] : 'Tujuan';
-        }
-        $total_dest = count($dests);
-        ?>
-        <table class="table-visum">
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td>
-                        <b>I. Berangkat dari</b> : Karang Baru<br>
-                        <b>Ke</b> : <?= esc($dests[0]) ?><br>
-                        <b>Pada Tanggal</b> : <?= tanggalIndo($sppd['tanggal_mulai']) ?><br>
-                        <b>Kepala</b>
-                        <div style="height: 45px;"></div>
-                        <b><u><?= esc($pejabat['nama']) ?></u></b><br>
-                        NIP. <?= esc($pejabat['nip']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>II. Tiba di</b> : <?= esc($dests[0]) ?><br>
-                        <b>Pada Tanggal</b> : <?= tanggalIndo($sppd['tanggal_mulai']) ?>
-                    </td>
-                    <td>
-                        <b>Berangkat dari</b> : <?= esc($dests[0]) ?><br>
-                        <b>Ke</b> : <?= $total_dest > 1 ? esc($dests[1]) : 'Karang Baru' ?><br>
-                        <b>Pada Tanggal</b> : <?= $total_dest > 1 ? '' : tanggalIndo($sppd['tanggal_selesai']) ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>III. Tiba di</b> : <?= $total_dest > 1 ? esc($dests[1]) : '' ?><br>
-                        <b>Pada Tanggal</b> : 
-                    </td>
-                    <td>
-                        <b>Berangkat dari</b> : <?= $total_dest > 1 ? esc($dests[1]) : '' ?><br>
-                        <b>Ke</b> : <?= $total_dest > 2 ? esc($dests[2]) : ($total_dest > 1 ? 'Karang Baru' : '') ?><br>
-                        <b>Pada Tanggal</b> : <?= ($total_dest > 1 && $total_dest == 2) ? tanggalIndo($sppd['tanggal_selesai']) : '' ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>IV. Tiba di</b> : <?= $total_dest > 2 ? esc($dests[2]) : '' ?><br>
-                        <b>Pada Tanggal</b> : 
-                    </td>
-                    <td>
-                        <b>Berangkat dari</b> : <?= $total_dest > 2 ? esc($dests[2]) : '' ?><br>
-                        <b>Ke</b> : <?= $total_dest > 3 ? esc($dests[3]) : ($total_dest > 2 ? 'Karang Baru' : '') ?><br>
-                        <b>Pada Tanggal</b> : <?= ($total_dest > 2 && $total_dest == 3) ? tanggalIndo($sppd['tanggal_selesai']) : '' ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <b>V. Tiba di</b> : <?= $total_dest > 3 ? esc($dests[3]) : '' ?><br>
-                        <b>Pada Tanggal</b> : 
-                    </td>
-                    <td>
-                        <b>VI. Berangkat dari</b> : <?= $total_dest > 4 ? esc($dests[4]) : ($total_dest > 3 ? esc($dests[3]) : '') ?><br>
-                        <b>Ke</b> : <?= $total_dest > 3 ? 'Karang Baru' : '' ?><br>
-                        <b>Pada Tanggal</b> : <?= $total_dest > 3 ? tanggalIndo($sppd['tanggal_selesai']) : '' ?><br>
-                        <b>Kepala</b>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="height: 80px;"></td>
-                    <td style="font-size: 11px; height: 80px; text-align: justify; line-height: 1.3;">
-                        Telah diperiksa, dengan keterangan bahwa perjalanan tersebut diatas benar dilakukan atas perintahnya dan semata-mata untuk kepentingan jabatan dalam waktu yang sesingkat-singkatnya.
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+            if (empty($dests)) {
+                $dests[] = !empty($sppd['tujuan_dinas']) ? $sppd['tujuan_dinas'] : 'Tujuan';
+            }
+            $total_dest = count($dests);
+            ?>
+            <table class="table-visum">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td>
+                            <b>I. Berangkat dari</b> : Karang Baru<br>
+                            <b>Ke</b> : <?= esc($dests[0]) ?><br>
+                            <b>Pada Tanggal</b> : <?= tanggalIndo($sppd['tanggal_mulai']) ?><br>
+                            <b>Kepala</b>
+                            <div style="height: 45px;"></div>
+                            <b><u><?= esc($pejabat['nama']) ?></u></b><br>
+                            NIP. <?= esc($pejabat['nip']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>II. Tiba di</b> : <?= esc($dests[0]) ?><br>
+                            <b>Pada Tanggal</b> : <?= tanggalIndo($sppd['tanggal_mulai']) ?>
+                        </td>
+                        <td>
+                            <b>Berangkat dari</b> : <?= esc($dests[0]) ?><br>
+                            <b>Ke</b> : <?= $total_dest > 1 ? esc($dests[1]) : 'Karang Baru' ?><br>
+                            <b>Pada Tanggal</b> : <?= $total_dest > 1 ? '' : tanggalIndo($sppd['tanggal_selesai']) ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>III. Tiba di</b> : <?= $total_dest > 1 ? esc($dests[1]) : '' ?><br>
+                            <b>Pada Tanggal</b> :
+                        </td>
+                        <td>
+                            <b>Berangkat dari</b> : <?= $total_dest > 1 ? esc($dests[1]) : '' ?><br>
+                            <b>Ke</b> : <?= $total_dest > 2 ? esc($dests[2]) : ($total_dest > 1 ? 'Karang Baru' : '') ?><br>
+                            <b>Pada Tanggal</b> : <?= ($total_dest > 1 && $total_dest == 2) ? tanggalIndo($sppd['tanggal_selesai']) : '' ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>IV. Tiba di</b> : <?= $total_dest > 2 ? esc($dests[2]) : '' ?><br>
+                            <b>Pada Tanggal</b> :
+                        </td>
+                        <td>
+                            <b>Berangkat dari</b> : <?= $total_dest > 2 ? esc($dests[2]) : '' ?><br>
+                            <b>Ke</b> : <?= $total_dest > 3 ? esc($dests[3]) : ($total_dest > 2 ? 'Karang Baru' : '') ?><br>
+                            <b>Pada Tanggal</b> : <?= ($total_dest > 2 && $total_dest == 3) ? tanggalIndo($sppd['tanggal_selesai']) : '' ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <b>V. Tiba di</b> : <?= $total_dest > 3 ? esc($dests[3]) : '' ?><br>
+                            <b>Pada Tanggal</b> :
+                        </td>
+                        <td>
+                            <b>VI. Berangkat dari</b> : <?= $total_dest > 4 ? esc($dests[4]) : ($total_dest > 3 ? esc($dests[3]) : '') ?><br>
+                            <b>Ke</b> : <?= $total_dest > 3 ? 'Karang Baru' : '' ?><br>
+                            <b>Pada Tanggal</b> : <?= $total_dest > 3 ? tanggalIndo($sppd['tanggal_selesai']) : '' ?><br>
+                            <b>Kepala</b>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height: 80px;"></td>
+                        <td style="font-size: 11px; height: 80px; text-align: justify; line-height: 1.3;">
+                            Telah diperiksa, dengan keterangan bahwa perjalanan tersebut diatas benar dilakukan atas perintahnya dan semata-mata untuk kepentingan jabatan dalam waktu yang sesingkat-singkatnya.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <!-- Catatan Lain-lain -->
-        <div style="border: 1px solid #000; padding: 6px 10px; font-size: 12px; margin-bottom: 10px;">
-            <b>VII. Catatan Lain-lain:</b>
-        </div>
+            <!-- Catatan Lain-lain -->
+            <div style="border: 1px solid #000; padding: 6px 10px; font-size: 12px; margin-bottom: 10px;">
+                <b>VII. Catatan Lain-lain:</b>
+            </div>
 
-        <!-- Perhatian -->
-        <div style="border: 1px solid #000; padding: 10px; font-size: 11.5px; text-align: justify; line-height: 1.4; margin-bottom: 25px;">
-            <b>VIII. Perhatian:</b><br>
-            PA yang menerbitkan SPD, pegawai yang melakukan perjalanan dinas, para pejabat yang mengesahkan tanggal berangkat/tiba, serta bendahara pengeluaran bertanggung jawab berdasarkan peraturan-peraturan Keuangan Negara apabila negara menderita rugi akibat kesalahan, kelalaian, dan kealpaannya.
-        </div>
+            <!-- Perhatian -->
+            <div style="border: 1px solid #000; padding: 10px; font-size: 11.5px; text-align: justify; line-height: 1.4; margin-bottom: 25px;">
+                <b>VIII. Perhatian:</b><br>
+                PA yang menerbitkan SPD, pegawai yang melakukan perjalanan dinas, para pejabat yang mengesahkan tanggal berangkat/tiba, serta bendahara pengeluaran bertanggung jawab berdasarkan peraturan-peraturan Keuangan Negara apabila negara menderita rugi akibat kesalahan, kelalaian, dan kealpaannya.
+            </div>
 
-        <!-- Tanda Tangan Footer PA Halaman 2 -->
-        <div class="ttd-container" style="margin-top: 15px;">
-            <div class="ttd-box">
-                <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 60px;">
-                    PENGGUNA ANGGARAN
+            <!-- Tanda Tangan Footer PA Halaman 2 -->
+            <div class="ttd-container" style="margin-top: 15px;">
+                <div class="ttd-box">
+                    <div style="font-weight: bold; text-transform: uppercase; margin-bottom: 60px;">
+                        PENGGUNA ANGGARAN
+                    </div>
+                    <div style="font-weight: bold; text-decoration: underline;"><?= esc($pejabat['nama']) ?></div>
+                    <div>NIP. <?= esc($pejabat['nip']) ?></div>
                 </div>
-                <div style="font-weight: bold; text-decoration: underline;"><?= esc($pejabat['nama']) ?></div>
-                <div>NIP. <?= esc($pejabat['nip']) ?></div>
             </div>
         </div>
-    </div>
     <?php endforeach; ?>
 
 </body>
+
 </html>

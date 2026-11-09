@@ -19,6 +19,7 @@
                     <th>NIP</th>
                     <th>Durasi Tugas</th>
                     <th>Tipe Perjalanan</th>
+                    <th>Status SPT</th>
                     <th class="text-center">Aksi Dokumen</th>
                     <th style="width: 100px;" class="text-center">Hapus</th>
                 </tr>
@@ -54,6 +55,14 @@
                                 <span class="badge bg-<?= ($sp['jenis'] === 'DL') ? 'primary' : 'warning' ?> px-3 py-2 rounded-pill" style="font-size:11px; font-weight:600;">
                                     <?= ($sp['jenis'] === 'DL') ? 'Luar Daerah' : 'Dalam Daerah' ?>
                                 </span>
+                            </td>
+                            <td>
+                                <?php
+                                $s = $sp['status_st'] ?? 'aktif';
+                                if ($s === 'aktif') echo '<span class="badge bg-success px-2 py-1 rounded-pill" style="font-size:11px;">Aktif</span>';
+                                elseif ($s === 'selesai') echo '<span class="badge bg-primary px-2 py-1 rounded-pill" style="font-size:11px;">Selesai</span>';
+                                else echo '<span class="badge bg-secondary px-2 py-1 rounded-pill" style="font-size:11px;">Diarsipkan</span>';
+                                ?>
                             </td>
                             <td class="text-center">
                                 <div class="d-flex align-items-center justify-content-center gap-2">

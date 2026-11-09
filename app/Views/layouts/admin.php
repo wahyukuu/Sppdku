@@ -351,6 +351,16 @@
                 <i data-lucide="file-spreadsheet"></i>
                 <span>Dokumen SPPD</span>
             </a>
+            
+            <a href="<?=base_url('arsip')?>" class="nav-link <?= ($activeMenu === 'arsip') ? 'active' : '' ?>">
+                <i data-lucide="archive"></i>
+                <span>Arsip Dokumen</span>
+            </a>
+            
+            <a href="<?=base_url('rekap')?>" class="nav-link <?= ($activeMenu === 'rekap') ? 'active' : '' ?>">
+                <i data-lucide="file-bar-chart"></i>
+                <span>Rekapitulasi</span>
+            </a>
 
             <?php if (session()->get('role') === 'admin') : ?>
                 <div class="sidebar-menu-title">Pengaturan</div>

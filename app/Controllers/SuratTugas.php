@@ -45,6 +45,7 @@ class SuratTugas extends BaseController
             ->select('surat_tugas.*, pegawai.nama as nama_pejabat')
             ->join('pejabat', 'pejabat.id = surat_tugas.id_pejabat_ttd')
             ->join('pegawai', 'pegawai.id_pegawai = pejabat.id_pegawai')
+            ->where('surat_tugas.status !=', 'diarsipkan')
             ->orderBy('surat_tugas.created_at', 'DESC')
             ->findAll();
 
@@ -134,6 +135,7 @@ class SuratTugas extends BaseController
             'jenis'           => $this->request->getPost('jenis'),
             'id_pejabat_ttd'  => $idPejabat,
             'id_user'         => session()->get('id_user') ?? 1,
+            'status'          => 'aktif',
             'hitung_sabtu'    => $this->request->getPost('hitung_sabtu') ? 1 : 0,
             'hitung_minggu'   => $this->request->getPost('hitung_minggu') ? 1 : 0,
         ];
@@ -358,5 +360,38 @@ class SuratTugas extends BaseController
         ];
 
         return view('surat_tugas/print', $data);
+    }
+
+    /**
+     * Mengubah status Surat Tugas (aktif / selesai / diarsipkan).
+     */
+    public function updateStatus($id, $status)
+    {
+        if (!session()->get('logged_in')) {
+            return redirect()->to(base_url('login'));
+        }
+
+        $allowed = ['aktif', 'selesai', 'diarsipkan'];
+        if (!in_array($status, $allowed)) {
+            return redirect()->back()->with('error', 'Status tidak valid.');
+        }
+
+        $st = $this->suratTugasModel->find($id);
+        if (!$st) {
+            return redirect()->back()->with('error', 'Surat Tugas tidak ditemukan.');
+        }
+
+        $this->suratTugasModel->update($id, ['status' => $status]);
+
+        $pesan = [
+            'aktif'      => 'Surat Tugas berhasil diaktifkan kembali.',
+            'selesai'    => 'Surat Tugas ditandai sebagai Selesai.',
+            'diarsipkan' => 'Surat Tugas berhasil dipindahkan ke Arsip.',
+        ];
+
+        if ($status === 'diarsipkan') {
+            return redirect()->to(base_url('arsip'))->with('success', $pesan[$status]);
+        }
+        return redirect()->to(base_url('surat-tugas'))->with('success', $pesan[$status]);
     }
 }

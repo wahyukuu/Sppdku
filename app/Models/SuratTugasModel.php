@@ -23,6 +23,7 @@ class SuratTugasModel extends Model
         'jenis',
         'id_pejabat_ttd',
         'id_user',
+        'status',
         'hitung_sabtu',
         'hitung_minggu',
     ];

@@ -64,6 +64,19 @@ $routes->group('surat-tugas', ['filter' => 'auth'], function ($routes) {
     $routes->get('edit/(:num)', 'SuratTugas::edit/$1');
     $routes->post('update/(:num)', 'SuratTugas::update/$1');
     $routes->get('delete/(:num)', 'SuratTugas::delete/$1');
+    $routes->get('status/(:num)/(:segment)', 'SuratTugas::updateStatus/$1/$2');
+});
+
+// Arsip routes (Auth only)
+$routes->group('arsip', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'Arsip::index');
+    $routes->get('restore/(:num)', 'Arsip::restore/$1');
+});
+
+// Rekap routes (Auth only)
+$routes->group('rekap', ['filter' => 'auth'], function ($routes) {
+    $routes->get('/', 'Rekap::index');
+    $routes->get('cetak', 'Rekap::cetakRekap');
 });
 
 // Alias group for underscore compatibility
